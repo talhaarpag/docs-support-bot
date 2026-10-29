@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nimbus Drive Help</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --text: #1b1f24; --muted: #5f6b7a; --border: #dde2e8;
+    --accent: #2f5fd0; --accent-text: #ffffff; --user: #2f5fd0; --bot: #ffffff; --chip: #eef2fb; --warn: #8a5a00; --warn-bg: #fff6e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111418; --panel: #1a1f25; --text: #e6e9ed; --muted: #9aa5b1; --border: #2c333c;
+      --accent: #6d95ff; --accent-text: #0b1020; --user: #3c66d6; --bot: #1f252c; --chip: #232b38; --warn: #f3c66b; --warn-bg: #2e2716; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .app { max-width: 760px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 0 16px; }
+  header { padding: 20px 0 12px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 18px; margin: 0; }
+  header p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  #log { flex: 1; padding: 16px 0; display: flex; flex-direction: column; gap: 14px; }
+  .msg { max-width: 88%; padding: 10px 14px; border-radius: 14px; white-space: pre-wrap; }
+  .user { align-self: flex-end; background: var(--user); color: #fff; border-bottom-right-radius: 4px; }
+  .bot { align-self: flex-start; background: var(--bot); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+  .bot.notfound { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+  sup { color: var(--accent); font-weight: 600; margin-left: 1px; }
+  .sources { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+  details { font-size: 13px; border-top: 1px solid var(--border); padding-top: 6px; }
+  summary { cursor: pointer; color: var(--muted); }
+  details p { margin: 4px 0 0; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 12px; }
+  .chip { border: 1px solid var(--border); background: var(--chip); color: var(--text); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  form { display: flex; gap: 8px; padding: 12px 0 20px; position: sticky; bottom: 0; background: var(--bg); }
+  input { flex: 1; min-width: 0; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font: inherit; }
+  button[type=submit] { padding: 0 18px; border: 0; border-radius: 10px; background: var(--accent); color: var(--accent-text); font: inherit; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: default; }
+  .meta { font-size: 12px; color: var(--muted); margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Nimbus Drive Help</h1>
+    <p>Answers come only from the help center, with sources. If something isn't documented, the assistant says so.</p>
+  </header>
+  <div id="log" aria-live="polite"></div>
+  <div class="chips" id="chips"></div>
+  <form id="form">
+    <input id="q" autocomplete="off" maxlength="500" placeholder="Ask about billing, refunds, security, sync…" required>
+    <button type="submit">Ask</button>
+  </form>
+</div>
+<script>
+const SUGGESTIONS = [
+  "How much does the Pro plan cost?",
+  "Can I get a refund after 2 weeks?",
+  "Do you support SMS two-factor codes?",
+  "What is the biggest file I can upload in the browser?",
+  "Who is the CEO of Nimbus Drive?",
+];
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("q");
+const button = form.querySelector("button");
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+// Render "[2]" markers as superscripts without ever using innerHTML on model output.
+function withCitations(text) {
+  const frag = document.createDocumentFragment();
+  text.split(/(\[\d+\])/).forEach(part => {
+    const m = part.match(/^\[(\d+)\]$/);
+    frag.append(m ? el("sup", null, m[1]) : document.createTextNode(part));
+  });
+  return frag;
+}
+
+function addBot(data) {
+  const box = el("div", "msg bot" + (data.found ? "" : " notfound"));
+  box.append(withCitations(data.answer));
+  if (data.sources?.length) {
+    const list = el("div", "sources");
+    for (const s of data.sources) {
+      const d = el("details");
+      d.append(el("summary", null, `[${s.n}] ${s.title} › ${s.section}`), el("p", null, s.snippet + "…"));
+      list.append(d);
+    }
+    box.append(list);
+  }
+  if (data.backend) box.append(el("div", "meta", `answered by: ${data.backend}`));
+  log.append(box);
+  box.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+async function ask(question) {
+  log.append(el("div", "msg user", question));
+  button.disabled = true;
+  try {
+    const res = await fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    addBot(await res.json());
+  } catch (err) {
+    addBot({ answer: "Sorry, something went wrong. Please try again.", found: false });
+  } finally {
+    button.disabled = false;
+    input.focus();
+  }
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const q = input.value.trim();
+  if (q.length < 2) return;
+  input.value = "";
+  ask(q);
+});
+
+const chips = document.getElementById("chips");
+SUGGESTIONS.forEach(s => {
+  const b = el("button", "chip", s);
+  b.type = "button";
+  b.onclick = () => ask(s);
+  chips.append(b);
+});
+</script>
+</body>
+</html>

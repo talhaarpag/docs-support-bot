@@ -1,0 +1,37 @@
+{"q": "How much does the Pro plan cost?", "file": "pricing-and-plans.md", "section": "Available plans", "expect": "$9"}
+{"q": "What is the minimum number of users for the Team plan?", "file": "pricing-and-plans.md", "section": "Available plans", "expect": "3 users"}
+{"q": "Is there a discount if I pay yearly?", "file": "pricing-and-plans.md", "section": "Annual billing", "expect": "20%"}
+{"q": "What happens if I downgrade and have too much data?", "file": "pricing-and-plans.md", "section": "Changing your plan", "expect": "read-only"}
+{"q": "Can I pay with PayPal?", "file": "pricing-and-plans.md", "section": "Payment methods", "expect": "PayPal"}
+{"q": "Do you accept crypto?", "file": "pricing-and-plans.md", "section": "Payment methods", "expect": "cryptocurrency"}
+{"q": "How do I add my VAT number to invoices?", "file": "pricing-and-plans.md", "section": "Taxes and invoices", "expect": "VAT number"}
+{"q": "Can I get my money back?", "file": "refunds-and-cancellation.md", "section": "Refund policy", "expect": "14 days"}
+{"q": "How long does a refund take?", "file": "refunds-and-cancellation.md", "section": "How to request a refund", "expect": "5 business days"}
+{"q": "How do I cancel my subscription?", "file": "refunds-and-cancellation.md", "section": "Cancelling your subscription", "expect": "Cancel subscription"}
+{"q": "Will my files be deleted if I cancel?", "file": "refunds-and-cancellation.md", "section": "Cancelling your subscription", "expect": "does not delete"}
+{"q": "What happens to files over the free limit after I cancel?", "file": "refunds-and-cancellation.md", "section": "What happens to my data after cancellation", "expect": "90 days"}
+{"q": "How can I delete my account permanently?", "file": "refunds-and-cancellation.md", "section": "Deleting your account", "expect": "30-day"}
+{"q": "I forgot my password", "file": "account-and-security.md", "section": "Resetting your password", "expect": "Forgot password"}
+{"q": "Do you support SMS two-factor codes?", "file": "account-and-security.md", "section": "Two-factor authentication", "expect": "SMS codes are not supported"}
+{"q": "I lost my phone with the authenticator app", "file": "account-and-security.md", "section": "Lost access to two-factor authentication", "expect": "backup code"}
+{"q": "Is my data encrypted?", "file": "account-and-security.md", "section": "Encryption", "expect": "AES-256"}
+{"q": "Where are EU customers' files stored?", "file": "account-and-security.md", "section": "Data location", "expect": "Frankfurt"}
+{"q": "How do I sign out of other devices?", "file": "account-and-security.md", "section": "Active sessions", "expect": "Active sessions"}
+{"q": "Can I put a password on a shared link?", "file": "sharing-and-teams.md", "section": "Sharing links", "expect": "password"}
+{"q": "What is the daily download limit for shared links on Pro?", "file": "sharing-and-teams.md", "section": "Sharing limits", "expect": "200 GB"}
+{"q": "How long is a team invitation valid?", "file": "sharing-and-teams.md", "section": "Inviting team members", "expect": "7 days"}
+{"q": "What can admins do?", "file": "sharing-and-teams.md", "section": "Roles", "expect": "Admins manage"}
+{"q": "What happens to files when a member is removed from the team?", "file": "sharing-and-teams.md", "section": "Removing a member", "expect": "transferred"}
+{"q": "My files are not syncing", "file": "sync-troubleshooting.md", "section": "Files are not syncing", "expect": "Resume sync"}
+{"q": "Does the desktop app work on Linux?", "file": "sync-troubleshooting.md", "section": "Supported systems", "expect": "Ubuntu"}
+{"q": "What is the biggest file I can upload in the browser?", "file": "sync-troubleshooting.md", "section": "File size limits", "expect": "5 GB"}
+{"q": "Why do I have a conflicted copy of my file?", "file": "sync-troubleshooting.md", "section": "Conflicted copies", "expect": "conflicted copy"}
+{"q": "How do I restore a deleted file?", "file": "sync-troubleshooting.md", "section": "Recovering deleted files and old versions", "expect": "Trash"}
+{"q": "How can I save disk space on my laptop?", "file": "sync-troubleshooting.md", "section": "Selective sync", "expect": "Selective sync"}
+{"q": "Who is the CEO of Nimbus Drive?", "unanswerable": true}
+{"q": "What is the capital of France?", "unanswerable": true}
+{"q": "Can you write me a poem about clouds?", "unanswerable": true}
+{"q": "Do you have a student discount?", "unanswerable": true}
+{"q": "Do you have an office in Tokyo?", "unanswerable": true}
+{"q": "How do I bake sourdough bread?", "unanswerable": true}
+{"q": "Can I get a refund after 2 weeks?", "file": "refunds-and-cancellation.md", "section": "Refund policy", "expect": "14 days"}
